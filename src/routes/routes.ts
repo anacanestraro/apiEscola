@@ -28,6 +28,10 @@ router.get('/buscarCurso/:cursoId', CursoController.buscarCurso);
 
 router.get('/listarTodasTurmas', TurmaController.listarTurmas);
 router.post('/cadastrarTurma', TurmaController.cadastrarTurma);
+router.put('/atualizarTurma/:turmaId', TurmaController.atualizarTurma);
+router.delete('/deletarTurma/:turmaId', TurmaController.deletarTurma);
+router.get('/buscarTurma/:turmaId', TurmaController.buscarTurma);
+
 export default router;
 
 
