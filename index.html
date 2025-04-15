@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Alunos e Disciplinas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body class="bg-light">
+    <div class="container mt-4">
+        <h2 class="text-center">Gestão de Alunos e Disciplinas</h2>
+
+        <section class="mt-4">
+            <h4>Alunos</h4>
+            <ul id="listaAlunos" class="list-group mb-3"></ul>
+            
+            <h5>Cadastrar Novo Aluno</h5>
+            <input type="text" id="nomeAluno" class="form-control mb-2" placeholder="Nome">
+            <input type="email" id="emailAluno" class="form-control mb-2" placeholder="E-mail">
+            <input type="text" id="matriculaAluno" class="form-control mb-2" placeholder="Matrícula">
+            <button class="btn btn-primary" onclick="cadastrarAluno()">Cadastrar</button>
+        </section>
+
+        <section class="mt-4">
+            <h4>Disciplinas</h4>
+            <ul id="listaDisciplinas" class="list-group mb-3"></ul>
+            
+            <h5>Cadastrar Nova Disciplina</h5>
+            <input type="text" id="nomeDisciplina" class="form-control mb-2" placeholder="Nome da Disciplina">
+            <button class="btn btn-success" onclick="cadastrarDisciplina()">Cadastrar</button>
+        </section>
+
+        <section class="mt-4">
+            <h4>Vincular Aluno a Disciplina</h4>
+            <select id="selectAluno" class="form-select mb-2"></select>
+            <select id="selectDisciplina" class="form-select mb-2"></select>
+            <button class="btn btn-warning" onclick="vincularAluno()">Vincular</button>
+        </section>
+
+        <section class="mt-4">
+            <h4>Disciplinas de um Aluno</h4>
+            <select id="selectAlunoDisciplinas" class="form-select mb-2"></select>
+            <button class="btn btn-info" onclick="listarDisciplinasDoAluno()">Listar Disciplinas</button>
+            <ul id="listaDisciplinasAluno" class="list-group mt-2"></ul>
+        </section>
+    </div>
+
+    <script>
+        const API_URL = "http://localhost:4000";
+
+        async function listarAlunos() {
+            const res = await axios.get(`${API_URL}/listarTodosAlunos`);
+            const lista = document.getElementById("listaAlunos");
+            const select = document.getElementById("selectAluno");
+            const selectDisciplinas = document.getElementById("selectAlunoDisciplinas");
+
+            lista.innerHTML = "";
+            select.innerHTML = '<option value="">Selecione um aluno</option>';
+            selectDisciplinas.innerHTML = '<option value="">Selecione um aluno</option>';
+
+            res.data.forEach(aluno => {
+                lista.innerHTML += `<li class="list-group-item">${aluno.nome} (${aluno.email})</li>`;
+                select.innerHTML += `<option value="${aluno.id}">${aluno.nome}</option>`;
+                selectDisciplinas.innerHTML += `<option value="${aluno.id}">${aluno.nome}</option>`;
+            });
+        }
+
+        async function listarDisciplinas() {
+            const res = await axios.get(`${API_URL}/listarTodasDisciplinas`);
+            const lista = document.getElementById("listaDisciplinas");
+            const select = document.getElementById("selectDisciplina");
+
+            lista.innerHTML = "";
+            select.innerHTML = '<option value="">Selecione uma disciplina</option>';
+
+            res.data.forEach(disciplina => {
+                lista.innerHTML += `<li class="list-group-item">${disciplina.nome}</li>`;
+                select.innerHTML += `<option value="${disciplina.id}">${disciplina.nome}</option>`;
+            });
+        }
+
+        async function cadastrarAluno() {
+            const nome = document.getElementById("nomeAluno").value;
+            const email = document.getElementById("emailAluno").value;
+            const matricula = document.getElementById("matriculaAluno").value;
+
+            if (!nome || !email || !matricula) return alert("Preencha todos os campos!");
+
+            await axios.post(`${API_URL}/cadastrarAluno`, { nome, email, matricula });
+            listarAlunos();
+        }
+
+        async function cadastrarDisciplina() {
+            const nome = document.getElementById("nomeDisciplina").value;
+            if (!nome) return alert("Preencha o nome da disciplina!");
+
+            await axios.post(`${API_URL}/cadastrarDisciplina`, { nome });
+            listarDisciplinas();
+        }
+
+        async function vincularAluno() {
+            const alunoId = document.getElementById("selectAluno").value;
+            const disciplinaId = document.getElementById("selectDisciplina").value;
+
+            if (!alunoId || !disciplinaId) return alert("Selecione um aluno e uma disciplina!");
+
+            await axios.post(`${API_URL}/vincularAlunoADisciplina`, { alunoId, disciplinaId });
+            alert("Aluno vinculado à disciplina com sucesso!");
+        }
+
+       // 🔹 Listar disciplinas de um aluno
+    async function listarDisciplinasDoAluno() {
+    const alunoId = document.getElementById("selectAlunoDisciplinas").value;
+    if (!alunoId) return alert("Selecione um aluno!");
+
+    const res = await axios.get(`${API_URL}/listarDisciplinasDoAluno/${alunoId}`);
+    const lista = document.getElementById("listaDisciplinasAluno");
+    lista.innerHTML = "";
+
+    console.log(res.data); // 🔹 Verifica a resposta no console
+
+    if (!res.data || !res.data.Disciplinas || res.data.Disciplinas.length === 0) {
+        lista.innerHTML = "<li class='list-group-item'>Nenhuma disciplina encontrada</li>";
+        return;
+    }
+
+    res.data.Disciplinas.forEach(disciplina => {
+        lista.innerHTML += `<li class="list-group-item">${disciplina.nome}</li>`;
+    });
+}
+
+        listarAlunos();
+        listarDisciplinas();
+    </script>
+</body>
+</html>
