@@ -1,17 +1,17 @@
 import { Request, Response } from "express";
 import { Aluno } from "../models/Aluno";
+import { AlunoDisciplina } from "../models/AlunoDisciplina";
 import { Op } from "sequelize";
 
-// 🔹 Listar todos os alunos
 export const listarAlunos = async (req: Request, res: Response) => {
     try {
         const alunos = await Aluno.findAll({
             where: {
                 deletedAt: {
-                    [Op.ne]: null, // Busca apenas os alunos que têm deletedAt preenchido
+                    [Op.ne]: null, 
                 },
             },
-            paranoid: false, // Permite acessar registros "soft deleted"
+            paranoid: false, 
         });
 
         return res.json(alunos);
@@ -20,13 +20,10 @@ export const listarAlunos = async (req: Request, res: Response) => {
     }
 };
 
-
-// 🔹 Cadastrar um novo aluno
 export const cadastrarAluno = async (req: Request, res: Response) => {
-    const { nome, email, matricula } = req.body;
+    const { nome, email, matricula, senha, turmaId } = req.body;
 
-    // 🔹 Criando o aluno sem verificações adicionais
-    let novoAluno = await Aluno.create({ nome, email, matricula });
+    let novoAluno = await Aluno.create({ nome, email, matricula, senha, turmaId });
 
     res.status(201).json({
         message: "Aluno cadastrado com sucesso.",
@@ -34,45 +31,50 @@ export const cadastrarAluno = async (req: Request, res: Response) => {
     });
 };
 
+export const atualizarAluno = async (req:Request, res: Response) => {
+    try{
+        const {alunoId} = req.params;
+        const dadosAtualizados = req.body;
+        const aluno = await Aluno.findByPk(alunoId);
+        if(!aluno){
+            res.status(404).json({error: "Aluno não encontrado."});
+            return; 
+            
+        }
+        const alunoAtualizado = await aluno.update(dadosAtualizados, {fields: Object.keys(dadosAtualizados)});
+        res.status(200).json({message:"Aluno atualizado com sucesso.", alunoAtualizado});
+        return; 
+    }catch(error){
+        res.status(400).json({error: "Erro no servidor"});
+        return;
+    }
+};
 
-export const atualizarAluno = async (req: Request, res: Response) => {
-
-    try {
-        const {alunoId} = req.params
-        const dadosAtualizados = req.body
-    
+export const deletarAluno = async (req:Request, res: Response) => {
+    try{
+        const {alunoId} = req.params;
         const aluno = await Aluno.findByPk(alunoId);
 
-        if(!aluno){
-            return res.status(400).json({message: "Aluno não encontrado"})
+        const alunoDisciplina = await AlunoDisciplina.findByPk(alunoId);
+
+        if(alunoDisciplina){
+            res.status(400).json({error:"Aluno possui disciplinas, não pode ser deletado!"});
+            return;
         }
-        await aluno.update(dadosAtualizados, { fields: Object.keys(dadosAtualizados) });
-    
-        
-    } catch (error) {
-        return res.status(400).json({message: "Erro do sistema"})
-    }
-   
-}
-
-
-export const deletarAluno = async (req: Request, res: Response) => {
-
-    try {
-        const {alunoId} = req.params    
-        const aluno = await Aluno.findByPk(alunoId);
 
         if(!aluno){
-            return res.status(400).json({message: "Aluno não encontrado"})
+            res.status(404).json({error: "Aluno não encontrado."});
+            return; 
         }
-        await aluno.destroy()
-    
-        
-    } catch (error) {
-        return res.status(400).json({message: "Erro do sistema"})
+        await aluno.destroy();
+        res.status(200).json({message: "Aluno deletado com sucesso"});
+        return;
+    }catch(error){
+
+        res.status(400).json({error: "Erro no servidor"});
+        return; 
     }
-   
-}
+};
 
 export const buscarAluno = async (req: Request, res: Response) => {
     const { alunoId } = req.params;
