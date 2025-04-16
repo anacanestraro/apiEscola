@@ -1,6 +1,7 @@
 import {Request, Response} from "express";
 import { Turma } from "../models/Turma";
 import { Op } from "sequelize";
+import { Aluno } from "../models/Aluno";
 
 export const listarTurmas = async (req: Request, res: Response) => {
     try {
@@ -47,6 +48,15 @@ export const atualizarTurma = async (req: Request, res: Response) => {
 export const deletarTurma = async (req: Request, res: Response) => {
     try {
         const {turmaId} = req.params;
+
+        const alunosVinculados = await Aluno.count({
+            where: {turmaId}
+        });
+
+        if(alunosVinculados > 0){
+            return res.status(400).json({error: "Turma não pode ser deletada pois possui alunos vinculados."});
+        }
+
         const turma = await Turma.findByPk(turmaId);
 
         if(!turma) {
