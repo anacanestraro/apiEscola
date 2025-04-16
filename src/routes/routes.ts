@@ -5,6 +5,7 @@ import * as DisciplinaController from '../controllers/DisciplinaController'
 import * as AlunoDisciplinaController from '../controllers/AlunoDisciplinaController'
 import * as CursoController from "../controllers/CursoController";
 import * as TurmaController from "../controllers/TurmaController";
+import * as ProfessorController from "../controllers/ProfessorController";
 
 const router = Router();
 
@@ -31,6 +32,13 @@ router.post('/cadastrarTurma', TurmaController.cadastrarTurma);
 router.put('/atualizarTurma/:turmaId', TurmaController.atualizarTurma);
 router.delete('/deletarTurma/:turmaId', TurmaController.deletarTurma);
 router.get('/buscarTurma/:turmaId', TurmaController.buscarTurma);
+
+router.get('/listarTodosProfessores', ProfessorController.listarProfessores);
+router.post('/cadastrarProfessor', ProfessorController.cadastrarProfessor);
+router.put('/atualizarProfessor/:professorId', ProfessorController.atualizarProfessor);
+router.delete('/deletarProfessor/:professorId', ProfessorController.deletarProfessor);
+router.get('/buscarProfessor/:professorId', ProfessorController.buscarProfessor);
+
 
 export default router;
 
