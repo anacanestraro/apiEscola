@@ -17,9 +17,16 @@ Disciplina.belongsToMany(Aluno, {
 Curso.hasMany(Turma, {
     foreignKey: "cursoId"
 });
-
 Turma.belongsTo(Curso, {
     foreignKey: "cursoId"
+});
+
+// TURMA/ALUNO
+Turma.hasMany(Aluno, {
+    foreignKey: "turmaId"
+});
+Aluno.belongsTo(Turma, {
+    foreignKey: "turmaId"
 });
 
 
