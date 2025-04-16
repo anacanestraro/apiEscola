@@ -1,46 +1,55 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../instances/mysql";
+import { Turma } from "./Turma";
 
-// 🔹 Criamos a classe `Aluno`, que estende `Model`.
-// Essa classe serve apenas para definir a estrutura dos dados que essa entidade terá no TypeScript.
-// Ou seja, define a tipagem dos atributos, mas ainda não os conecta ao Sequelize.
 export class Aluno extends Model {
   public id!: number;
   public nome!: string;
   public email!: string;
+  public senha!: string;
   public matricula!: string;
+  public turmaId!: number;
 }
 
-// 🔹 Aqui é onde realmente informamos ao Sequelize como a tabela "alunos" deve ser criada no banco de dados.
-// 1️⃣ O primeiro parametro define os atributos da tabela e suas regras (tipos, se são únicos, se podem ser nulos, etc.).
-// 2️⃣ O segundo parametro configurações gerais da tabela, como nome e timestamps.
 Aluno.init(
   {
-    // 🔹 Definição dos atributos da tabela no banco de dados
     id: {
-      type: DataTypes.INTEGER, // Define como um número inteiro
-      primaryKey: true, // Define como chave primária
-      autoIncrement: true, // Faz o ID ser gerado automaticamente pelo banco
+      type: DataTypes.INTEGER, 
+      primaryKey: true, 
+      autoIncrement: true, 
     },
     nome: {
-      type: DataTypes.STRING, // Define como string (VARCHAR no banco)
-      allowNull: false, // O nome não pode ser nulo
+      type: DataTypes.STRING, 
+      allowNull: false, 
     },
     email: {
       type: DataTypes.STRING,
-      unique: true, // O email deve ser único
+      unique: true, 
+      allowNull: false,
+    },
+    senha: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
     matricula: {
       type: DataTypes.STRING,
-      unique: true, // A matrícula também deve ser única
+      unique: true, 
       allowNull: false,
     },
+    turmaId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: Turma,
+        key: "id",
+      },
+      onDelete: "CASCADE",
+    }
   },
   {
-    sequelize, // 🔹 Aqui passamos a instância do Sequelize, conectando essa model ao banco
-    tableName: "alunos", // Define o nome da tabela no banco de dados
+    sequelize, 
+    tableName: "alunos", 
     paranoid:true,
-    timestamps: true, // Como não queremos colunas de "createdAt" e "updatedAt", desativamos timestamps
+    timestamps: true, 
   }
 );
