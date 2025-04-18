@@ -1,9 +1,11 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../instances/mysql";
+import { Professor } from "./Professor";
 
 export class Disciplina extends Model {
   public id!: number;
   public nome!: string;
+  public professorId!: number;
 }
 
 Disciplina.init(
@@ -18,10 +20,20 @@ Disciplina.init(
       allowNull: false,
       unique: true,
     },
+    profesosrId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: Professor,
+        key: "id"
+      },
+      onDelete: "CASCADE"
+    },
   },
   {
     sequelize,
     tableName: "disciplinas",
-    timestamps: false,
+    timestamps: true,
+    paranoid: true
   }
 );
