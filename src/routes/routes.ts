@@ -18,6 +18,11 @@ router.get('/buscarAlunoId/:alunoId', AlunoController.buscarAluno)
 router.get('/listarTodasDisciplinas', DisciplinaController.listarDisciplinas);
 router.post('/cadastrarDisciplina', DisciplinaController.cadastrarDisciplina);
 router.put('/atualizarDisciplina/:disciplinaId', DisciplinaController.atualizarDisciplina);
+router.delete('/deletarDisciplina/:disciplinaId', DisciplinaController.deletarDisciplina);
+router.get('/buscarDisciplina/:disciplinaId', DisciplinaController.buscarDisciplina);
+
+
+
 router.post("/vincularAlunoADisciplina", AlunoDisciplinaController.vincularAlunoADisciplina);
 router.get("/listarDisciplinasDoAluno/:alunoId", AlunoDisciplinaController.listarDisciplinasDoAluno);
 
