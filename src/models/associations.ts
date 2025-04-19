@@ -3,6 +3,7 @@ import { Disciplina } from "./Disciplina";
 import { AlunoDisciplina } from "./AlunoDisciplina";
 import { Turma } from "./Turma";
 import { Curso } from "./Curso";
+import { Professor } from "./Professor";
 Aluno.belongsToMany(Disciplina, { 
     through: AlunoDisciplina,
     foreignKey: "alunoId" 
@@ -27,6 +28,14 @@ Turma.hasMany(Aluno, {
 });
 Aluno.belongsTo(Turma, {
     foreignKey: "turmaId"
+});
+
+// PROFESSOR/DISCIPLINA
+Professor.hasMany(Disciplina, {
+    foreignKey: "professorId"
+});
+Disciplina.belongsTo(Professor, {
+    foreignKey: "professorId"
 });
 
 
