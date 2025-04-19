@@ -1,6 +1,5 @@
 import {Request, Response} from "express";
 import { Turma } from "../models/Turma";
-import { Op } from "sequelize";
 import { Aluno } from "../models/Aluno";
 
 export const listarTurmas = async (req: Request, res: Response) => {

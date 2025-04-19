@@ -1,19 +1,10 @@
 import { Request, Response } from "express";
 import { Aluno } from "../models/Aluno";
 import { AlunoDisciplina } from "../models/AlunoDisciplina";
-import { Op } from "sequelize";
 
 export const listarAlunos = async (req: Request, res: Response) => {
     try {
-        const alunos = await Aluno.findAll({
-            where: {
-                deletedAt: {
-                    [Op.ne]: null, 
-                },
-            },
-            paranoid: false, 
-        });
-
+        const alunos = await Aluno.findAll();
         return res.json(alunos);
     } catch (error) {
         return res.status(500).json({ message: "Erro ao buscar alunos deletados" });
@@ -21,14 +12,17 @@ export const listarAlunos = async (req: Request, res: Response) => {
 };
 
 export const cadastrarAluno = async (req: Request, res: Response) => {
-    const { nome, email, matricula, senha, turmaId } = req.body;
-
-    let novoAluno = await Aluno.create({ nome, email, matricula, senha, turmaId });
-
-    res.status(201).json({
-        message: "Aluno cadastrado com sucesso.",
-        novoAluno
-    });
+    try{
+        const { nome, email, matricula, senha, turmaId } = req.body;
+        let novoAluno = await Aluno.create({ nome, email, matricula, senha, turmaId });
+    
+        res.status(201).json({
+            message: "Aluno cadastrado com sucesso.",
+            novoAluno
+        });
+    }catch(error){
+        return res.status(400).json({error: "Erro ao cadastrar Aluno."})
+    }
 };
 
 export const atualizarAluno = async (req:Request, res: Response) => {
@@ -77,12 +71,16 @@ export const deletarAluno = async (req:Request, res: Response) => {
 };
 
 export const buscarAluno = async (req: Request, res: Response) => {
-    const { alunoId } = req.params;
-    const aluno = await Aluno.findByPk(alunoId);
-
-    if (aluno) {
-        return res.json(aluno);
+    try{
+        const { alunoId } = req.params;
+        const aluno = await Aluno.findByPk(alunoId);
+    
+        if (aluno) {
+            return res.json(aluno);
+        }
+    
+        return res.status(404).json({ error: "Aluno não encontrado." });
+    }catch(error){
+        return res.status(400).json({error: "Erro no servidor."});
     }
-
-    return res.status(404).json({ error: "Aluno não encontrado." });
 };

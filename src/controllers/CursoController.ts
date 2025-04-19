@@ -1,18 +1,10 @@
 import {Request, Response} from "express";
 import {Curso} from "../models/Curso";
-import { json, Op } from "sequelize";
 import { Turma } from "../models/Turma";
 
 export const listarCursos = async (req: Request, res: Response) => {
     try {
-        const cursos = await Curso.findAll({
-            where: {
-                deletedAt: {
-                    [Op.ne]: null,
-                },
-            },
-            paranoid: false,
-        });
+        const cursos = await Curso.findAll();
         return res.json(cursos);
     }catch(error) {
         return res.status(500).json({message: "Erro ao buscar cursos deletados"})
@@ -20,13 +12,17 @@ export const listarCursos = async (req: Request, res: Response) => {
 };
 
 export const cadastrarCurso = async (req: Request, res: Response) => {
-    const {nome, descricao} = req.body;
-    let novoCurso = await Curso.create({nome, descricao});
-
-    res.status(201).json({
-        message: "Curso cadastrado com sucesso.",
-        novoCurso
-    });
+    try{
+        const {nome, descricao} = req.body;
+        let novoCurso = await Curso.create({nome, descricao});
+    
+        res.status(201).json({
+            message: "Curso cadastrado com sucesso.",
+            novoCurso
+        });
+    }catch(error){
+        return res.status(400).json({error: "Erro ao cadastrar Curso."});
+    }
 };
 
 export const atualizaCurso = async (req: Request, res: Response) => {
@@ -73,11 +69,15 @@ export const deletarCurso = async (req: Request, res: Response) => {
 };
 
 export const buscarCurso = async (req: Request, res: Response) => {
-    const {cursoId} = req.params;
-    const curso = await Curso.findByPk(cursoId);
-
-    if(curso) {
+    try{
+        const {cursoId} = req.params;
+        const curso = await Curso.findByPk(cursoId);
+    
+        if(!curso) {
+            return res.status(404).json({error: "Curso não encontrado."});
+        }
         return res.json(curso);
+    }catch(error){
+        return res.status(400).json({error: "Erro no servidor."});
     }
-    return res.status(404).json({error: "Curso não encontrado."});
 };

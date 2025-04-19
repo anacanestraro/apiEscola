@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { Op } from "sequelize";
 import { Disciplina } from "../models/Disciplina";
 import { AlunoDisciplina } from "../models/AlunoDisciplina";
 
