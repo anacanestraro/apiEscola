@@ -20,7 +20,7 @@ Disciplina.init(
       allowNull: false,
       unique: true,
     },
-    profesosrId: {
+    professorId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
