@@ -5,29 +5,26 @@ import { Aluno } from "../models/Aluno";
 
 export const listarTurmas = async (req: Request, res: Response) => {
     try {
-        const turmas = await Turma.findAll({
-            where: {
-                deletedAt: {
-                    [Op.ne]: null,
-                },
-            },
-            paranoid: false,
-        });
-
+        const turmas = await Turma.findAll();
         return res.json(turmas);
     }catch(error) {
-        return res.status(500).json({message: "Erro ao buscar turmas deletadas."})
+        return res.status(500).json({error: "Erro ao buscar turmas deletadas."})
     }
 };
 
 export const cadastrarTurma = async (req: Request, res: Response) => {
-    const{nome, periodo, cursoId} = req.body;
-    let novaTurma = await Turma.create({nome, periodo, cursoId});
+    try{
+        const{nome, periodo, cursoId} = req.body;
+        let novaTurma = await Turma.create({nome, periodo, cursoId});
+    
+        res.status(201).json({
+            message: "Turma cadastrada com sucesso.",
+            novaTurma
+        });
+    }catch(error){ 
+        return res.status(400).json({error: "Erro ao cadastrar turma"});
 
-    res.status(201).json({
-        message: "Turma cadastrada com sucesso.",
-        novaTurma
-    });
+    }
 };
 
 export const atualizarTurma = async (req: Request, res: Response) => {
@@ -71,11 +68,16 @@ export const deletarTurma = async (req: Request, res: Response) => {
 };
 
 export const buscarTurma = async (req:Request, res: Response) => {
-    const {turmaId} = req.params;
-    const turma = await Turma.findByPk(turmaId);
-
-    if(turma) {
+    try {
+        const {turmaId} = req.params;
+        const turma = await Turma.findByPk(turmaId);
+    
+        if(!turma) {
+            return res.status(404).json({error: "Turma não encontrada."});
+        }
         return res.json(turma);
+    }catch(error){
+        return res.status(400).json({error: "Erro no servidor."});
     }
-    return res.status(404).json({error: "Turma não encontrada."});
+        
 };
