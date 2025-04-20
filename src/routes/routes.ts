@@ -21,10 +21,10 @@ router.put('/atualizarDisciplina/:disciplinaId', DisciplinaController.atualizarD
 router.delete('/deletarDisciplina/:disciplinaId', DisciplinaController.deletarDisciplina);
 router.get('/buscarDisciplina/:disciplinaId', DisciplinaController.buscarDisciplina);
 
-
-
 router.post("/vincularAlunoADisciplina", AlunoDisciplinaController.vincularAlunoADisciplina);
 router.get("/listarDisciplinasDoAluno/:alunoId", AlunoDisciplinaController.listarDisciplinasDoAluno);
+router.put("/atualizarVinculoAlunoDisciplina/:vinculoId", AlunoDisciplinaController.atualizarVinculoAlunoDisciplina);
+router.delete("/deletarVinculoAlunoDisciplina/:vinculoId", AlunoDisciplinaController.deletarVinculoAlunoDisciplina);
 
 router.get('/listarTodosCursos', CursoController.listarCursos);
 router.post('/cadastrarCurso', CursoController.cadastrarCurso);
