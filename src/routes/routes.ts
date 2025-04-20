@@ -7,6 +7,7 @@ import * as CursoController from "../controllers/CursoController";
 import * as TurmaController from "../controllers/TurmaController";
 import * as ProfessorController from "../controllers/ProfessorController";
 import * as NotaController from "../controllers/NotaController";
+import * as PresencaController from "../controllers/PresencaController";
 
 const router = Router();
 
@@ -49,6 +50,11 @@ router.get('/listarTodasNotas', NotaController.listarNotas);
 router.post('/cadastrarNota', NotaController.cadastrarNotas);
 router.put('/atualizarNota/:notaId', NotaController.atualizarNota);
 router.delete('/deletarNota/:notaId', NotaController.deletarNota);
+
+router.get('/listarTodasPresencas', PresencaController.listarPresencas);
+router.post('/cadastrarPresenca', PresencaController.cadastrarPresenca);
+router.put('/atualizarPresenca/:presencaId', PresencaController.atualizarPresenca);
+router.delete('/deletarPresenca/:presencaId', PresencaController.deletarPresenca);
 
 
 export default router;

@@ -4,6 +4,8 @@ import { AlunoDisciplina } from "./AlunoDisciplina";
 import { Turma } from "./Turma";
 import { Curso } from "./Curso";
 import { Professor } from "./Professor";
+import { Nota } from "./Nota";
+import { Presenca } from "./Presenca";
 Aluno.belongsToMany(Disciplina, { 
     through: AlunoDisciplina,
     foreignKey: "alunoId" 
@@ -38,6 +40,33 @@ Disciplina.belongsTo(Professor, {
     foreignKey: "professorId"
 });
 
+// NOTA/ALUNO/DISCIPLINA
+Aluno.hasMany(Nota, {
+    foreignKey: "alunoId"
+});
+Disciplina.hasMany(Nota, {
+    foreignKey: "disciplinaId"
+});
+Nota.belongsTo(Aluno, {
+    foreignKey: "alunoId"
+});
+Nota.belongsTo(Disciplina, {
+    foreignKey: "alunoId"
+});
+
+// PRESENÇA/ALUNO/DISCIPLINA
+Aluno.hasMany(Presenca, {
+    foreignKey: "alunoId"
+});
+Disciplina.hasMany(Presenca, {
+    foreignKey: "disciplinaId"
+});
+Presenca.belongsTo(Aluno, {
+    foreignKey: "alunoId"
+});
+Presenca.belongsTo(Disciplina, {
+    foreignKey: "alunoId"
+});
 
 console.log("✅ Relações entre models configuradas!");
 
