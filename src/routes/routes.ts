@@ -15,7 +15,8 @@ router.get('/listarTodosAlunos', AlunoController.listarAlunos);
 router.post('/cadastrarAluno', AlunoController.cadastrarAluno);
 router.put('/atualizarAluno/:alunoId', AlunoController.atualizarAluno);
 router.delete('/deletarAluno/:alunoId', AlunoController.deletarAluno);
-router.get('/buscarAlunoId/:alunoId', AlunoController.buscarAluno)
+router.get('/buscarAlunoId/:alunoId', AlunoController.buscarAluno);
+router.get('/notasPorAluno/:alunoId', AlunoController.notasPorAlunos);
 
 router.get('/listarTodasDisciplinas', DisciplinaController.listarDisciplinas);
 router.post('/cadastrarDisciplina', DisciplinaController.cadastrarDisciplina);
