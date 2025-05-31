@@ -8,15 +8,18 @@ import * as TurmaController from "../controllers/TurmaController";
 import * as ProfessorController from "../controllers/ProfessorController";
 import * as NotaController from "../controllers/NotaController";
 import * as PresencaController from "../controllers/PresencaController";
+import * as auth from "../controllers/authController";
+
+import { autenticarAluno, autenticarProfessor, autenticarToken } from '../middlewares/auth';
 
 const router = Router();
 
-router.get('/listarTodosAlunos', AlunoController.listarAlunos);
+router.get('/listarTodosAlunos', autenticarProfessor, AlunoController.listarAlunos);
 router.post('/cadastrarAluno', AlunoController.cadastrarAluno);
 router.put('/atualizarAluno/:alunoId', AlunoController.atualizarAluno);
 router.delete('/deletarAluno/:alunoId', AlunoController.deletarAluno);
-router.get('/buscarAlunoId/:alunoId', AlunoController.buscarAluno);
-router.get('/notasPorAluno/:alunoId', AlunoController.notasPorAlunos);
+router.get('/buscarAlunoId/:alunoId', autenticarProfessor, AlunoController.buscarAluno);
+router.get('/notasPorAluno/:alunoId', autenticarAluno, AlunoController.notasPorAlunos);
 
 router.get('/listarTodasDisciplinas', DisciplinaController.listarDisciplinas);
 router.post('/cadastrarDisciplina', DisciplinaController.cadastrarDisciplina);
@@ -41,11 +44,11 @@ router.put('/atualizarTurma/:turmaId', TurmaController.atualizarTurma);
 router.delete('/deletarTurma/:turmaId', TurmaController.deletarTurma);
 router.get('/buscarTurma/:turmaId', TurmaController.buscarTurma);
 
-router.get('/listarTodosProfessores', ProfessorController.listarProfessores);
+router.get('/listarTodosProfessores', autenticarToken, ProfessorController.listarProfessores);
 router.post('/cadastrarProfessor', ProfessorController.cadastrarProfessor);
 router.put('/atualizarProfessor/:professorId', ProfessorController.atualizarProfessor);
 router.delete('/deletarProfessor/:professorId', ProfessorController.deletarProfessor);
-router.get('/buscarProfessor/:professorId', ProfessorController.buscarProfessor);
+router.get('/buscarProfessor/:professorId', autenticarToken, ProfessorController.buscarProfessor);
 
 router.get('/listarTodasNotas', NotaController.listarNotas);
 router.post('/cadastrarNota', NotaController.cadastrarNotas);
@@ -57,6 +60,7 @@ router.post('/cadastrarPresenca', PresencaController.cadastrarPresenca);
 router.put('/atualizarPresenca/:presencaId', PresencaController.atualizarPresenca);
 router.delete('/deletarPresenca/:presencaId', PresencaController.deletarPresenca);
 
+router.post('/login', auth.login);
 
 export default router;
 
