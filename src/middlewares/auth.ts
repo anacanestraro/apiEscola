@@ -48,7 +48,7 @@ export const autenticarProfessor = (req: Request, res: Response, next: NextFunct
         res.status(403).json({error: 'Acesso negado'});
         return;
     }
-
+    
     next();
 
     }catch(error){
