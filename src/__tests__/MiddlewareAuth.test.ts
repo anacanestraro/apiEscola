@@ -7,7 +7,6 @@ const JWT_SECRET = process.env.JWT_SECRET || 'senha-secreta';
 describe ('Rotas', () => {
     const tokenProfessor = jwt.sign({ id: 1, nome: 'Prof', tipo: 'professor' }, JWT_SECRET);
     const tokenAluno = jwt.sign({ id: 1, nome: 'Aluno', tipo: 'aluno' }, JWT_SECRET);
-    const tokenSemTipo = jwt.sign({ id: 1, nome: 'Usuário' }, JWT_SECRET);
     const tokenInvalido = 'token-invalido-123';
 
     it('🟢 Token válido Professor → acesso permitido (403)', async () =>{
