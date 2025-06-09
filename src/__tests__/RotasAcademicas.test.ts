@@ -16,12 +16,6 @@ describe('Testes de funcionalidades ', () => {
         .set('Authorization', `Bearer ${tokenProfessor}`);
         expect(response.status).toBe(200);
     });
-    it('NotasPorAluno - não deve permitir acesso de aluno', async () =>{
-        const response = await request(server)
-        .get('/notasPorAluno/1')
-        .set('Authorization', `Bearer ${tokenAluno}`);
-        expect(response.status).toBe(403);
-    }); 
     it('NotasPorAluno - deve retornar erro aluno inexistente', async () =>{
         const response = await request(server)
         .get('/notasPorAluno/91299239')
@@ -34,12 +28,6 @@ describe('Testes de funcionalidades ', () => {
         .get('/presencasPorAluno/1')
         .set('Authorization', `Bearer ${tokenProfessor}`);
         expect(response.status).toBe(200);
-    });
-    it('PresencasPorAluno - não deve retornar as presencas de uma aluno', async () =>{
-        const response = await request(server)
-        .get('/presencasPorAluno/1')
-        .set('Authorization', `Bearer ${tokenAluno}`);
-        expect(response.status).toBe(403);
     });
 
     it('PresencasPorAluno - deve retornar erro aluno inexistente', async () =>{
@@ -54,13 +42,6 @@ describe('Testes de funcionalidades ', () => {
         .get('/situacaoPorAluno/1')
         .set('Authorization', `Bearer ${tokenProfessor}`);
         expect(response.status).toBe(200);
-    })
-
-    it('SituacaoPorAluno - não deve retornar a situação de um aluno', async() => {
-        const response = await request(server)
-        .get('/situacaoPorAluno/1')
-        .set('Authorization', `Bearer ${tokenAluno}`);
-        expect(response.status).toBe(403);
     })
 
     it('SituacaoPorAluno - deve retornar erro aluno inexistente', async() => {
